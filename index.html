@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Yash Tambade - Neural Evolution.">
+    <link rel="icon" type="image/png" href="https://images.seeklogo.com/logo-png/61/2/one-piece-skull-logo-png_seeklogo-613212.png">
+    <title>Make Cool Websites!!!</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=Inter:wght@400;600&family=Space+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00d2ff;
+            --neon-orange: #ff6b00;
+            --bg-dark: #050505;
+            --deep-blue: #051622;
+            --skin-tone: #f5d0c5;
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --ui-scale: 1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-weight: 800;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .main-nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            opacity: 1;
+        }
+
+        /* Background Layers */
+        .evolution-container {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .character-pivot {
+            position: absolute;
+            width: 350px;
+            height: 500px;
+            left: 50%;
+            top: 55%;
+            transform: translate(-50%, -50%);
+            transition: left 0.1s ease-out, transform 0.1s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .char-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 99999 !important;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: high-quality;
+        }
+
+        .neural-network {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .neural-path {
+            fill: none;
+            stroke: var(--neon-orange);
+            stroke-width: calc(3.5px * var(--ui-scale));
+            stroke-dasharray: 8, 12;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 calc(12px * var(--ui-scale)) rgba(255, 107, 0, 0.8));
+            animation: flowStream 2s linear infinite;
+            opacity: 0.8;
+            transition: all 0.5s ease;
+        }
+
+        @keyframes flowStream {
+            from { stroke-dashoffset: 40; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Responsive Evolution Panels */
+        .nexus-panels {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            width: calc(260px * var(--ui-scale));
+            height: calc(200px * var(--ui-scale));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .nexus-panels.left { left: 5%; }
+        .nexus-panels.right { right: 5%; }
+
+        .nexus-card {
+            position: absolute;
+            height: calc(180px * var(--ui-scale));
+            width: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            transform: translateY(calc(30px * var(--ui-scale))) scale(0.9);
+            transform-style: preserve-3d;
+        }
+
+        .nexus-card.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0) scale(1);
+        }
+
+        .nexus-card.visible:nth-child(odd) {
+            transform: translateY(calc(-100px * var(--ui-scale)));
+        }
+
+        .nexus-card.visible:nth-child(even) {
+            transform: translateY(calc(100px * var(--ui-scale)));
+        }
+
+        .nc-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            transform: translateZ(1px);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .nexus-card:hover .nc-inner {
+            transform: rotateY(180deg);
+        }
+
+        .nc-front, .nc-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: transparent;
+            image-rendering: -webkit-optimize-contrast;
+            border-radius: 8px;
+            overflow: hidden;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .nc-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Content Sections */
+        .smooth-scroller {
+            height: 100vh;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+
+        .smooth-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        .page-section {
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            padding: calc(60px * var(--ui-scale)) 8%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        #section-1 {
+            background: linear-gradient(rgba(5, 5, 5, 0.4), rgba(5, 5, 5, 0.4)), url('assets/1stbg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+        }
+
+        #section-2, #section-3, #section-4 {
+            background: linear-gradient(rgba(5, 22, 34, 0.6), rgba(5, 22, 34, 0.6)), url('assets/labbg.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+
+        #section-5 {
+            background: linear-gradient(rgba(5, 22, 34, 0.85), rgba(5, 22, 34, 0.85)), url('assets/5th.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .side-content {
+            max-width: 600px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .side-content h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            line-height: 0.85;
+            font-weight: 800;
+        }
+
+        .side-content h2 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 800;
+            line-height: 0.85;
+        }
+
+        .side-content p {
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .reveal-up {
+            transform: translateY(40px);
+            opacity: 0;
+            transition: all 0.9s ease;
+        }
+
+        .reveal-up.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .phase-indicator {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.2;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            opacity: 1;
+            transform: scale(1.5);
+            background: var(--neon-blue);
+        }
+
+        .scroll-helper {
+            position: fixed;
+            bottom: calc(40px * var(--ui-scale));
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: calc(0.6rem * var(--ui-scale));
+            letter-spacing: calc(4px * var(--ui-scale));
+            opacity: 0.4;
+            mix-blend-mode: difference;
+            z-index: 1000;
+        }
+
+        .step-text {
+            position: absolute;
+            bottom: calc(40px * var(--ui-scale));
+            right: 8%;
+            font-size: calc(1.5rem * var(--ui-scale));
+            font-weight: 800;
+            z-index: 10;
+        }
+
+        /* Full-Art Flashcards */
+        .flashcard-grid {
+            margin-top: calc(20px * var(--ui-scale));
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: calc(20px * var(--ui-scale));
+            width: 90%;
+            max-width: calc(1200px * var(--ui-scale));
+            padding: calc(10px * var(--ui-scale)) 0;
+            pointer-events: auto;
+        }
+
+        .flash-card {
+            perspective: 1500px;
+            height: calc(240px * var(--ui-scale));
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            will-change: transform;
+            transform-style: preserve-3d;
+        }
+
+        .flash-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            transform: translateZ(1px);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .flash-card:hover .flash-inner {
+            box-shadow: 0 0 calc(20px * var(--ui-scale)) rgba(174, 255, 0, 0.3);
+        }
+
+        .flash-card.flipped .flash-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flash-front, .flash-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: calc(12px * var(--ui-scale));
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 calc(5px * var(--ui-scale)) calc(20px * var(--ui-scale)) rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            transition: all 0.4s ease;
+        }
+        .flash-front {
+            background-repeat: no-repeat;
+            background-position: center bottom;
+        }
+
+        .flash-back {
+            transform: rotateY(180deg);
+            background: rgba(5, 22, 34, 0.95);
+            border: 1px solid #AEFF00;
+            padding: calc(40px * var(--ui-scale)) calc(10px * var(--ui-scale)) calc(10px * var(--ui-scale)) !important;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .flash-back strong {
+            color: #AEFF00;
+            display: block;
+            margin-bottom: calc(4px * var(--ui-scale));
+            text-transform: uppercase;
+            font-size: calc(0.75rem * var(--ui-scale));
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.5s ease 0.1s;
+        }
+
+        .flash-back p {
+            font-size: calc(0.6rem * var(--ui-scale));
+            color: #fff;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease 0.2s;
+        }
+
+        .flash-card.flipped .flash-back p, .flash-card.flipped .flash-back strong {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .github-btn {
+            margin-top: calc(8px * var(--ui-scale));
+            padding: calc(4px * var(--ui-scale)) calc(12px * var(--ui-scale));
+            background: transparent;
+            border: 1px solid #AEFF00;
+            color: #AEFF00;
+            font-family: 'Space Mono', monospace;
+            font-size: calc(0.6rem * var(--ui-scale));
+            cursor: pointer;
+            border-radius: calc(4px * var(--ui-scale));
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(10px);
+            font-weight: bold;
+        }
+        
+        .github-btn:hover {
+            background: #AEFF00;
+            color: #051622;
+            box-shadow: 0 0 calc(10px * var(--ui-scale)) #AEFF00;
+        }
+        
+        .flash-card.flipped .github-btn {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.5s ease 0.3s;
+        }
+
+        .folder-card .flash-front, .folder-card .flash-back {
+            border-radius: 0;
+            clip-path: polygon(0 15%, 25% 15%, 32% 0, 80% 0, 88% 15%, 100% 15%, 100% 100%, 0 100%);
+        }
+
+        .folder-card .flash-front { background-color: #051622; }
+
+        .front-caption {
+            position: absolute;
+            bottom: calc(15px * var(--ui-scale));
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(5, 22, 34, 0.8);
+            border: 1px solid #AEFF00;
+            color: #AEFF00;
+            padding: calc(6px * var(--ui-scale)) calc(12px * var(--ui-scale));
+            font-size: calc(0.8rem * var(--ui-scale));
+            font-family: 'Space Mono', monospace;
+            font-weight: 800;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            white-space: normal;
+            text-align: center;
+            width: 80%;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .flash-front::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: calc(15px * var(--ui-scale));
+            background: linear-gradient(to bottom, rgba(174, 255, 0, 0), rgba(174, 255, 0, 0.5), rgba(174, 255, 0, 0));
+            box-shadow: 0 0 calc(15px * var(--ui-scale)) rgba(174, 255, 0, 0.5);
+            transition: top 0.5s ease;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes scanLaser {
+            0% { top: -20%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 120%; opacity: 0; }
+        }
+
+        .flash-card:hover .flash-front::after {
+            animation: scanLaser 2s linear infinite;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="top-bar">
+        <div class="logo">YT</div>
+        <nav class="main-nav">
+            <a href="https://github.com/yashtambade56-ux">GitHub</a>
+        </nav>
+    </header>
+
+    <div class="evolution-container">
+        <svg class="neural-network" id="neural-svg" style="z-index: 1;"></svg>
+        <div class="character-pivot" id="char-pivot" style="z-index: 10;">
+            <img src="assets/1.png" alt="Phase 1" class="char-layer" id="char-1" style="opacity:1;">
+            <img src="assets/2.png" alt="Phase 2" class="char-layer" id="char-2">
+            <img src="assets/3.png" alt="Phase 3" class="char-layer" id="char-3">
+            <img src="assets/3.png" alt="Final Evolution" class="char-layer" id="char-3d">
+        </div>
+
+
+
+        <div class="nexus-panels left" id="left-panels">
+            <!-- Phase 2: IDEA -->
+            <div class="nexus-card ph2">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_1.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_1.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+            <div class="nexus-card ph2">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_3.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_3.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3: BUILD -->
+            <div class="nexus-card ph3">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_5.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_5.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+            <div class="nexus-card ph3">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_7.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_7.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 4: LAUNCH -->
+            <div class="nexus-card ph4">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_9.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_9.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+            <div class="nexus-card ph4">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_11.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_11.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nexus-panels right" id="right-panels">
+            <!-- Phase 2: IDEA -->
+            <div class="nexus-card ph2">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_2.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_2.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+            <div class="nexus-card ph2">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_4.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_4.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3: BUILD -->
+            <div class="nexus-card ph3">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_6.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_6.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+            <div class="nexus-card ph3">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_8.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_8.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 4: LAUNCH -->
+            <div class="nexus-card ph4">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_10.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_10.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+            <div class="nexus-card ph4">
+                <div class="nc-inner">
+                    <div class="nc-front"
+                        style="background-image: url('assets/card_12.png'); background-size: contain;">
+                    </div>
+                    <div class="nc-back"
+                        style="background-image: url('assets/flip_12.png'); background-size: contain;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="phase-indicator">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <div class="scroll-helper"><span>ORIGIN</span></div>
+
+    <main class="smooth-scroller" id="scroll-root">
+        <section class="page-section" id="section-1">
+
+            <div class="side-content">
+                <h1 class="reveal-up">HOW <br>I BUILD <br>Crazy <br>Websites...</h1>
+                <p class="reveal-up"><br>From static design to smooth animations, scroll effects, and engaging UI.</p>
+            </div>
+
+            <!-- Bottom Right Text -->
+            <h2 class="step-text reveal-up" style="text-align: center;">How I Build Websites <br> Complete My Character to See It<br>Step-by-Step<br>↓</h2>
+        </section>
+
+
+        <section class="page-section" id="section-2"
+            style="display: flex; align-items: flex-start; justify-content: flex-start;">
+            <div class="side-content" style="text-align: left;">
+                <h2 class="reveal-up">Origin</h2>
+                <p class="reveal-up">where ideas are born</p>
+            </div>
+        </section>
+
+        <section class="page-section" id="section-3"
+            style="display: flex; align-items: flex-start; justify-content: flex-start;">
+            <div class="side-content" style="text-align: left;">
+                <h2 class="reveal-up">Creation</h2>
+                <p class="reveal-up">where ideas take shape</p>
+            </div>
+        </section>
+
+        <section class="page-section" id="section-4"
+            style="display: flex; align-items: flex-start; justify-content: flex-start;">
+            <div class="side-content" style="text-align: left;">
+                <h2 class="reveal-up">Evolution</h2>
+                <p class="reveal-up">where it launches and grows</p>
+            </div>
+        </section>
+
+        <section class="page-section" id="section-5"
+            style="display: flex; align-items: flex-start; justify-content: flex-start;">
+            <div class="side-content" style="text-align: left; max-width: 900px; padding-top: 50px;">
+                <h2 class="reveal-up">SHOWCASE SOME OF THEM</h2>
+                <p class="reveal-up" style="color: #AEFF00; margin-bottom: 20px;">Chack shome project which i works / click the card to filp</p>
+
+                <div class="flashcard-grid reveal-up">
+                    <div class="flash-card ph5 folder-card"
+                        onclick="this.classList.toggle('flipped')">
+                        <div class="flash-inner">
+                            <div class="flash-front"
+                                style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'); background-size: cover; background-position: center;">
+                                <div class="front-caption">Portfolio_v1</div>
+                            </div>
+                            <div class="flash-back">
+                                <strong>Portfolio_v1</strong>
+                                <p>Interactive personal portfolio website with custom animations.</p>
+                                <button class="github-btn" onclick="event.stopPropagation(); window.open('https://yashhh710.github.io/Portfolio_v1/', '_blank')">Launch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flash-card ph5 folder-card"
+                        onclick="this.classList.toggle('flipped')">
+                        <div class="flash-inner">
+                            <div class="flash-front"
+                                style="background-image: url('https://tse1.mm.bing.net/th/id/OIP.5sFMrFHnOUYP5Ne_omvw8wHaEK?rs=1&pid=ImgDetMain&o=7&rm=3'); background-size: cover; background-position: center;">
+                                <div class="front-caption">Gta 6</div>
+                            </div>
+                            <div class="flash-back">
+                                <strong>Gta 6</strong>
+                                <p>Dynamic landing page tribute featuring immersive visuals.</p>
+                                <button class="github-btn" onclick="event.stopPropagation(); window.open('https://yashhh710.github.io/gta-6/', '_blank')">Launch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flash-card ph5 folder-card"
+                        onclick="this.classList.toggle('flipped')">
+                        <div class="flash-inner">
+                            <div class="flash-front"
+                                style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80'); background-size: cover; background-position: center;">
+                                <div class="front-caption">FoodieExpress</div>
+                            </div>
+                            <div class="flash-back">
+                                <strong>FoodieExpress</strong>
+                                <p>Fast food delivery web application with custom cart logic.</p>
+                                <button class="github-btn" onclick="event.stopPropagation(); window.open('https://foodie-express-ten-topaz.vercel.app/', '_blank')">Launch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flash-card ph5 folder-card"
+                        onclick="this.classList.toggle('flipped')">
+                        <div class="flash-inner">
+                            <div class="flash-front"
+                                style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80'); background-size: cover; background-position: center;">
+                                <div class="front-caption">reaction-speed-test</div>
+                            </div>
+                            <div class="flash-back">
+                                <strong>reaction-speed-test</strong>
+                                <p>Interactive reflex mini-game tracking pure reaction speed.</p>
+                                <button class="github-btn" onclick="event.stopPropagation(); window.open('https://yashhh710.github.io/reaction-speed-test/', '_blank')">Launch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flash-card ph5 folder-card"
+                        onclick="this.classList.toggle('flipped')">
+                        <div class="flash-inner">
+                            <div class="flash-front"
+                                style="background-image: url('https://img-cdn.heygame.io/gameimages/49f6e4ff-f2ca-46c3-a20b-8c4e3a93a84a-Tic-Tac-Toe.webp'); background-size: cover; background-position: center;">
+                                <div class="front-caption">tic-tac-toe</div>
+                            </div>
+                            <div class="flash-back">
+                                <strong>tic-tac-toe</strong>
+                                <p>Classic grid game built with clean logic and interactive UI.</p>
+                                <button class="github-btn" onclick="event.stopPropagation(); window.open('https://yashhh710.github.io/tic-tac-toe-html-css/index.html', '_blank')">Launch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flash-card ph5 folder-card"
+                        onclick="this.classList.toggle('flipped')">
+                        <div class="flash-inner">
+                            <div class="flash-front"
+                                style="background-image: url('https://www.hdcarwallpapers.com/walls/porsche_911_gt3_rs_2022_4k_6-HD.jpg'); background-size: cover; background-position: center;">
+                                <div class="front-caption">porshe</div>
+                            </div>
+                            <div class="flash-back">
+                                <strong>porshe</strong>
+                                <p>High-fidelity landing page showcasing sleek automotive design.</p>
+                                <button class="github-btn" onclick="event.stopPropagation(); window.open('https://yashhh710.github.io/porshe/', '_blank')">Launch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flash-card ph5 folder-card"
+                        onclick="this.classList.toggle('flipped')">
+                        <div class="flash-inner">
+                            <div class="flash-front"
+                                style="background-image: url('https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=600&q=80'); background-size: cover; background-position: center;">
+                                <div class="front-caption">20-tasks</div>
+                            </div>
+                            <div class="flash-back">
+                                <strong>20-tasks</strong>
+                                <p>Clean task management application for organizing productivity.</p>
+                                <button class="github-btn" onclick="event.stopPropagation(); window.open('https://yashhh710.github.io/20-tasks/', '_blank')">Launch</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flash-card ph5 folder-card"
+                        onclick="this.classList.toggle('flipped')">
+                        <div class="flash-inner">
+                            <div class="flash-front"
+                                style="background-image: url('https://axonev.vercel.app/models/img/Vehicalshowroommainpage.png'); background-size: cover; background-position: center;">
+                                <div class="front-caption">Axon Ev</div>
+                            </div>
+                            <div class="flash-back">
+                                <strong>Axon Ev</strong>
+                                <p>A website for rent electric car</p>
+                                <button class="github-btn" onclick="event.stopPropagation(); window.open('https://axonev.vercel.app/', '_blank')">Launch</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+    <script>
+        const scrollRoot = document.getElementById('scroll-root');
+        const charLayers = [document.getElementById('char-1'), document.getElementById('char-2'), document.getElementById('char-3')];
+        const char3d = document.getElementById('char-3d');
+        const neuralSvg = document.getElementById('neural-svg');
+        const cards = document.querySelectorAll('.nexus-card');
+        const dots = document.querySelectorAll('.dot');
+        const scrollText = document.querySelector('.scroll-helper span');
+
+        // NEW High-Fidelity Lerp Engine
+        let targetScroll = 0;
+        let currentScroll = 0;
+        const lerpFactor = 0.08; // Damping factor (0.1 = Snappy, 0.05 = Organic)
+
+        function tick() {
+            // High-Fidelity Precision Scale (Baseline 1440px)
+            const uiScale = window.innerWidth / 1440;
+            document.documentElement.style.setProperty('--ui-scale', uiScale);
+
+            // Lerp currentScroll towards targetScroll
+            currentScroll += (targetScroll - currentScroll) * lerpFactor;
+
+            // If very close, snap to target to save CPU
+            if (Math.abs(targetScroll - currentScroll) < 0.1) {
+                currentScroll = targetScroll;
+            }
+
+            // Execute Animation Frame based on currentScroll
+            updateAnimations(currentScroll / window.innerHeight);
+
+            requestAnimationFrame(tick);
+        }
+
+        // Initialize target on scroll
+        scrollRoot.addEventListener('scroll', () => {
+            targetScroll = scrollRoot.scrollTop;
+        });
+
+        function updateAnimations(progress) {
+            const phase = Math.floor(progress);
+            const offset = progress % 1;
+
+            const charPivot = document.getElementById('char-pivot');
+            let currentLeft = 50;
+            let currentTop = 50;
+            let currentScale = 1;
+
+            if (progress <= 1) {
+                // S1 (0) to S2 (1): Giant Hero rising into Quite Big Laboratory state
+                currentLeft = 50;
+                currentTop = 125 - (progress * 75); // 125 -> 50
+                currentScale = 5.0 - (progress * 3.65); // Settle at 1.35
+                charPivot.style.zIndex = "10";
+            } else if (progress > 1 && progress <= 3.4) {
+                // S2 (1) to S4 (3.4): Majestic 'Quite Big' Staging
+                currentLeft = 50;
+                currentTop = 50;
+                currentScale = 1.35;
+                charPivot.style.zIndex = "10";
+            } else if (progress > 3.4) {
+                // S5: Move character to right and make it smaller
+                const p = Math.min(1, (progress - 3.4) * 1.66);
+                currentLeft = 50 + (p * 30); // Right side
+                currentTop = 50 + (p * 5); // Move down to anchor feet to the bottom cityscape
+                currentScale = 1.35 - (p * 0); // Scale down
+                charPivot.style.zIndex = "0"; // Behind cards
+            }
+
+            charPivot.style.left = `${currentLeft}%`;
+            charPivot.style.top = `${currentTop}%`;
+            charPivot.style.transform = `translate(-50%, -50%) scale(${currentScale})`;
+
+            // Clean Pure Cross-fade Transitions
+            charLayers.forEach((layer, i) => {
+                let opacity = 0;
+
+                if (i === 0) { // Img 1: Sketch (S2 center = 1)
+                    if (progress >= 0.5 && progress <= 1.5) {
+                        opacity = 1;
+                    } else if (progress > 1.5 && progress < 2.0) {
+                        opacity = 1 - (progress - 1.5) * 2;
+                    }
+                } else if (i === 1) { // Img 2: Progress (S3 center = 2)
+                    if (progress > 1.5 && progress < 2.0) {
+                        opacity = (progress - 1.5) * 2;
+                    } else if (progress >= 2.0 && progress <= 2.5) {
+                        opacity = 1;
+                    } else if (progress > 2.5 && progress < 3.0) {
+                        opacity = 1 - (progress - 2.5) * 2;
+                    }
+                } else if (i === 2) { // Img 3: Full 3D (S1, S4, S5)
+                    if (progress < 0.5) {
+                        opacity = 1;
+                    } else if (progress >= 0.5 && progress < 1.0) {
+                        opacity = 1 - (progress - 0.5) * 2;
+                    } else if (progress > 2.5 && progress < 3.0) {
+                        opacity = (progress - 2.5) * 2;
+                    } else if (progress >= 3.0) {
+                        opacity = 1;
+                    }
+                }
+
+                layer.style.opacity = opacity;
+                layer.style.filter = 'none'; // Absolutely no blur or glow
+                layer.style.maskImage = 'none'; // Absolutely no wipe
+                layer.style.webkitMaskImage = 'none';
+            });
+
+            // Phase UI and Character Heading Sync
+            const labels = ['CASE STUDY', 'THE LAB', 'SYNTHESIS', 'SINGULARITY', 'SHOWCASE'];
+            const labelIndex = Math.min(Math.max(0, Math.round(progress)), labels.length - 1);
+            scrollText.innerText = labels[labelIndex];
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === labelIndex));
+
+            // Text Revelations
+            document.querySelectorAll('.reveal-up').forEach((el) => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.95) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+
+            // Card Visibility: Triggering 4 cards per section
+            cards.forEach(card => {
+                let show = false;
+                if (progress > 0.5 && progress < 1.5 && card.classList.contains('ph2')) show = true;
+                if (progress > 1.5 && progress < 2.5 && card.classList.contains('ph3')) show = true;
+                if (progress > 2.5 && progress < 3.5 && card.classList.contains('ph4')) show = true;
+                card.classList.toggle('visible', show);
+            });
+
+            drawLines(progress);
+        }
+
+        function drawLines(progress) {
+            neuralSvg.innerHTML = '';
+            // Allow neural paths across the technical research window (Sections 2 to 4)
+            if (progress < 0.4 || progress > 3.9) return;
+
+            const charPivot = document.getElementById('char-pivot').getBoundingClientRect();
+            const cx = charPivot.left + charPivot.width / 2;
+            const cy = charPivot.top + charPivot.height / 2;
+
+            document.querySelectorAll('.nexus-card.visible').forEach(card => {
+
+                const cr = card.getBoundingClientRect();
+                const isLeft = cr.left < window.innerWidth / 2;
+
+                // Unified Start Point (Neural Core effect)
+                const startY = cy;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const cardX = isLeft ? cr.right : cr.left;
+                const cardY = cr.top + cr.height / 4;
+
+                // Shallow Focal Curvature
+                const curvePower = (cardX - cx) * 0.5;
+                const vOffset = (cardY < cy) ? -35 : 35; // Subtle symmetric blooming
+
+                const cp1x = cx + curvePower;
+                const cp1y = startY + vOffset;
+                const cp2x = cx + curvePower;
+                const cp2y = cardY + vOffset;
+
+                const d = `M ${cx} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${cardX} ${cardY}`;
+
+                path.setAttribute('d', d);
+                path.setAttribute('class', 'neural-path');
+                path.style.opacity = 0.8; // Consistent vibrant opacity for active lines
+                neuralSvg.appendChild(path);
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            targetScroll = scrollRoot.scrollTop;
+        });
+
+        // 3D Interactive Hover for Flashcards
+        document.querySelectorAll('.flash-card').forEach(card => {
+            const inner = card.querySelector('.flash-inner');
+
+            // Add a glare element
+            const glare = document.createElement('div');
+            glare.style.position = 'absolute';
+            glare.style.top = '0';
+            glare.style.left = '0';
+            glare.style.width = '100%';
+            glare.style.height = '100%';
+            glare.style.background = 'radial-gradient(circle at 50% 50%, rgba(174, 255, 0, 0.2) 0%, transparent 50%)';
+            glare.style.opacity = '0';
+            glare.style.pointerEvents = 'none';
+            glare.style.mixBlendMode = 'overlay';
+            glare.style.transition = 'opacity 0.4s ease';
+            glare.style.zIndex = '20';
+            inner.appendChild(glare);
+
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                // Sensitivity multiplier
+                const rx = ((y - centerY) / centerY) * -12;
+                const ry = ((x - centerX) / centerX) * 12;
+
+                card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-10px) scale(1.03)`;
+                card.style.transition = 'none'; // snappy follow
+
+                // Move glare
+                const glareX = (x / rect.width) * 100;
+                const glareY = (y / rect.height) * 100;
+                glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(174, 255, 0, 0.3) 0%, transparent 60%)`;
+                glare.style.opacity = '1';
+                glare.style.transition = 'none';
+            });
+
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)`;
+                card.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                glare.style.opacity = '0';
+                glare.style.transition = 'opacity 0.5s ease';
+            });
+        });
+
+        // Initialize and start the high-fidelity tick loop
+        tick();
+    </script>
+</body>
+
+</html>
